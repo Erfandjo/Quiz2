@@ -44,32 +44,48 @@ namespace Quiz2.Service
             var destinationCard = _cardRepository.GetCard(destinationCardNumber);
             if (CurrentUser.CurrentUser.OnlineUser.CardNumber == sourceCardNumber)
             {
-                if (sourceCard is not null)
+                if (transferAmount <= 250)
                 {
-                    if (destinationCard is not null)
+                    if (sourceCard is not null)
                     {
-                        if (sourceCard.IsActive)
+                        if (destinationCard is not null)
                         {
-                            if (CheckTransfer(sourceCardNumber).IsSucces)
+                            if (sourceCard.IsActive)
                             {
-                                if (sourceCard.Balance >= transferAmount)
+                                if (CheckTransfer(sourceCardNumber).IsSucces)
                                 {
-                                    _cardRepository.Transfer(sourceCardNumber, destinationCardNumber, transferAmount);
-                                    Entities.Transaction transaction = new Entities.Transaction()
+                                    if (sourceCard.Balance >= transferAmount)
                                     {
-                                        Amount = transferAmount,
-                                        DestinationCardNumber = destinationCardNumber,
-                                        SourceCardNumber = sourceCardNumber,
-                                        TransactionDate = DateTime.Now,
-                                        isSuccessful = true,
-                                    };
-                                    _transactionRepository.Add(transaction);
-                                    return new Result(true, "Success");
+                                        _cardRepository.Transfer(sourceCardNumber, destinationCardNumber, transferAmount);
+                                        Entities.Transaction transaction = new Entities.Transaction()
+                                        {
+                                            Amount = transferAmount,
+                                            DestinationCardNumber = destinationCardNumber,
+                                            SourceCardNumber = sourceCardNumber,
+                                            TransactionDate = DateTime.Now,
+                                            isSuccessful = true,
+                                        };
+                                        _transactionRepository.Add(transaction);
+                                        return new Result(true, "Success");
+                                    }
+                                    else
+                                    {
+
+                                        Entities.Transaction transaction2 = new Entities.Transaction()
+                                        {
+                                            Amount = transferAmount,
+                                            DestinationCardNumber = destinationCardNumber,
+                                            SourceCardNumber = sourceCardNumber,
+                                            TransactionDate = DateTime.Now,
+                                            isSuccessful = false,
+                                        };
+                                        _transactionRepository.Add(transaction2);
+                                        return new Result(false, "Insufficient inventory");
+                                    }
                                 }
                                 else
                                 {
-
-                                    Entities.Transaction transaction2 = new Entities.Transaction()
+                                    Entities.Transaction transaction3 = new Entities.Transaction()
                                     {
                                         Amount = transferAmount,
                                         DestinationCardNumber = destinationCardNumber,
@@ -77,42 +93,34 @@ namespace Quiz2.Service
                                         TransactionDate = DateTime.Now,
                                         isSuccessful = false,
                                     };
-                                    _transactionRepository.Add(transaction2);
-                                    return new Result(false, "Insufficient inventory");
+                                    _transactionRepository.Add(transaction3);
+                                    return new Result(false, "Card is Not Active");
                                 }
                             }
                             else
                             {
-                                Entities.Transaction transaction3 = new Entities.Transaction()
-                                {
-                                    Amount = transferAmount,
-                                    DestinationCardNumber = destinationCardNumber,
-                                    SourceCardNumber = sourceCardNumber,
-                                    TransactionDate = DateTime.Now,
-                                    isSuccessful = false,
-                                };
-                                _transactionRepository.Add(transaction3);
-                                return new Result(false, "Card is Not Active");
+                                return new Result(false, "Destination Card Not Found");
                             }
+
                         }
                         else
                         {
-                            return new Result(false, "Destination Card Not Found");
+                            return new Result(false, "Source Card Not Found");
                         }
-
                     }
                     else
                     {
-                        return new Result(false, "Source Card Not Found");
+                        return new Result(false, CheckTransfer(sourceCardNumber).Message);
                     }
                 }
                 else
                 {
-                    return new Result(false, CheckTransfer(sourceCardNumber).Message);
+                    return new Result(false, "Not Access");
                 }
-            } else
+            }
+            else
             {
-                return new Result(false, "Not Access");
+                return new Result(false, "indicating the transfer limit has been exceeded");
             }
 
 
