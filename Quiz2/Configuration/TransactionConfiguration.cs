@@ -11,8 +11,19 @@ namespace Quiz2.Configuration
         public void Configure(EntityTypeBuilder<Entities.Transaction> builder)
         {
             builder.HasKey(x => x.TransactionId);
-            builder.HasOne(x => x.SourceCard).WithMany(x => x.Transactions).HasForeignKey(x => x.SourceCardNumber);
             
+            builder.ToTable("Transactions");
+
+            builder.HasOne(x => x.SourceCard)
+                .WithMany(x => x.TransactionsAsSource)
+                .HasForeignKey(x => x.SourceCardNumber)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.DestinationCard)
+                .WithMany(x => x.TransactionsAsDestination)
+                .HasForeignKey(x => x.DestinationCardNumber)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

@@ -1,0 +1,51 @@
+body
+{
+   height: 100%;
+   margin: 0;
+}
+
+.background
+{
+    background-image: url('https://img.freepik.com/premium-vector/banking-service-background-bank-building-icon-made-with-currency-symbols-dollar-euro-yen-pound-icons_127544-803.jpg?semt=ais_hybrid');
+    
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contaner
+{
+    border-radius: 10px;
+     background-color: white;
+    height: 500px;
+    width: 1000px;
+     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    padding: 20px;
+ }
+
+ p
+ {
+    font-size: 30px;
+    color: black;
+    font-style: bol;
+    text-align: center;
+ }
+
+ table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }

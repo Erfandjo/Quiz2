@@ -7,8 +7,8 @@
         public string DestinationCardNumber { get; set; }
         public DateTime ActionAt { get; set; }
         public float Amount { get; set; }
-        public DateTime TransactionDate { get; set; }
-        public bool isSuccessful { get; set; }
+        public bool IsSuccess { get; set; }
         public Card SourceCard { get; set; }
+        public Card DestinationCard { get; set; }
     }
 }

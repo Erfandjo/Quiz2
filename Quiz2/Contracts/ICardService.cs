@@ -1,9 +1,12 @@
-﻿namespace Quiz2.Contracts
+﻿using Quiz2.Entities;
+
+namespace Quiz2.Contracts
 {
     public interface ICardService
     {
-        Result Transfer(string sourceCardNumber, string destinationCardNumber, float TransferAmount);
-        Result Login(string cardNumber, string password);
-        void CheckTryLogin(string cardNumber);
+        Result PasswordIsValid(string cardNumber, string password);
+        public Result DisplayInformationTransfer(string cardNumber , float amount);
+        public float GetBalance(string cardNumber);
+        public void ChangePassword(string cardNumber, string password);
     }
 }

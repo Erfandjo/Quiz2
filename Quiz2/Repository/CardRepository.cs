@@ -7,40 +7,128 @@ namespace Quiz2.Repository
 {
     public class CardRepository : ICardRepository
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly AppDbContext _dbContext;
 
         public CardRepository()
         {
-            _appDbContext = new AppDbContext();
+            _dbContext = new AppDbContext();
         }
 
-        public Card? GetCard(string cardNumber)
+        public void ChangePassword(string cardNumber, string password)
         {
-            return _appDbContext.Cards.AsNoTracking().FirstOrDefault(x => x.CardNumber == cardNumber);
-        }
-
-        public void InActiveCard(string cartNumber)
-        {
-            var cart = _appDbContext.Cards.FirstOrDefault(x => x.CardNumber == cartNumber);
-            if ( cart is not null)
+            var card = _dbContext.Cards.FirstOrDefault(x => x.CardNumber == cardNumber);
+            if (card is not null)
             {
-                cart.IsActive = false;
-                _appDbContext.SaveChanges();
+                card.Password = password;
+                _dbContext.SaveChanges();
             }
+            
         }
 
-        public bool Login(string cardNumber, string password)
+        public bool PasswordIsValid(string cardNumber, string password)
+        => _dbContext.Cards.Any(x => x.CardNumber == cardNumber && x.Password == password);
+
+        public bool CardIsActive(string cardNumber)
+            => _dbContext.Cards.Any(x => x.CardNumber == cardNumber && x.IsActive);
+
+        public Card GetCardBy(string cardNumber)
         {
-            return _appDbContext.Cards.AsNoTracking().Any(x => x.CardNumber == cardNumber && x.Password == password);
+            var card = _dbContext.Cards.AsNoTracking().Include(x => x.User).FirstOrDefault(x => x.CardNumber == cardNumber);
+
+            if (card is null)
+            {
+                throw new Exception($"Card with number {cardNumber} not found");
+            }
+            else
+            {
+                return card;
+            }
+
         }
 
-        public void Transfer(string sourceCardNumber, string destinationCardNumber, float transferAmount)
+        public void ClearWrongPasswordTry(string cardNumber)
         {
-            var sourceCard = _appDbContext.Cards.FirstOrDefault(x => x.CardNumber == sourceCardNumber);
-            var destinationCard = _appDbContext.Cards.FirstOrDefault(x => x.CardNumber == destinationCardNumber);
-                sourceCard.Balance -= transferAmount;
-                destinationCard.Balance += transferAmount;
-            _appDbContext.SaveChanges();
+            var card = _dbContext.Cards
+                .FirstOrDefault(x => x.CardNumber == cardNumber);
+
+            if (card is null)
+            {
+                throw new Exception($"cannot found card with number {cardNumber}");
+            }
+
+            card.WrongPasswordTries = 0;
+            _dbContext.SaveChanges();
         }
+
+        public void SaveChanges()
+        {
+            _dbContext.SaveChanges();
+        }
+
+        public void Withdraw(string cardNumber, float amount)
+        {
+            var card = _dbContext.Cards
+                .FirstOrDefault(x => x.CardNumber == cardNumber);
+
+            if (card is null)
+            {
+                throw new Exception($"cannot found card with number {cardNumber}");
+            }
+
+            card.Balance -= amount;
+        }
+
+        public void Deposit(string cardNumber, float amount)
+        {
+            var card = _dbContext.Cards
+                .FirstOrDefault(x => x.CardNumber == cardNumber);
+
+            if (card is null)
+            {
+                throw new Exception($"cannot found card with number {cardNumber}");
+            }
+
+            card.Balance += amount;
+        }
+
+        public void SetWrongPasswordTry(string cardNumber)
+        {
+            var card = _dbContext.Cards
+                .FirstOrDefault(x => x.CardNumber == cardNumber);
+
+            if (card is null)
+            {
+                throw new Exception($"cannot found card with number {cardNumber}");
+            }
+
+            card.WrongPasswordTries++;
+            _dbContext.SaveChanges();
+        }
+
+        public int GetWrongPasswordTry(string cardNumber)
+        {
+            var card = _dbContext.Cards
+                .FirstOrDefault(x => x.CardNumber == cardNumber);
+
+            if (card is null)
+            {
+                throw new Exception($"cannot found card with number {cardNumber}");
+            }
+
+            return card.WrongPasswordTries;
+        }
+
+        public float getBalance(string cardNumber)
+        {
+            var card = _dbContext.Cards.AsNoTracking().FirstOrDefault(x => x.CardNumber == cardNumber);
+
+           
+            if (card is null)
+            {
+                throw new Exception($"cannot found card with number {cardNumber}");
+            }
+            return card.Balance;
+        }
+
     }
 }

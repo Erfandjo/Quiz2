@@ -4,9 +4,16 @@ namespace Quiz2.Contracts
 {
     public interface ICardRepository
     {
-        void Transfer(string sourceCardNumber , string destinationCardNumber , float transferAmount);
-        Card? GetCard(string cardNumber);
-        void InActiveCard(string cartNumber);
-        bool Login(string cardNumber , string password);
+        bool PasswordIsValid(string cardNumber, string password);
+        void Withdraw(string cardNumber, float amount);
+        void Deposit(string cardNumber, float amount);
+        void SetWrongPasswordTry(string cardNumber);
+        int GetWrongPasswordTry(string cardNumber);
+        bool CardIsActive(string cardNumber);
+        Card GetCardBy(string cardNumber);
+        void ClearWrongPasswordTry(string cardNumber);
+        void ChangePassword(string cardNumber, string password);
+        void SaveChanges();
+        public float getBalance(string cardNumber);
     }
 }
