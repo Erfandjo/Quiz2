@@ -1,0 +1,28 @@
+﻿@model App.Domain.Core.Quiz2.Card.Entities.Card
+
+<p style="text-align:center; font-size:24px;" class="mb-3">Transfer Money</p>
+
+<div class="container px-5 my-5">
+    <form method="post" asp-action="DisplayInformationTransfer">
+        <div class="form-floating mb-3">
+            <input disabled value=@Model.CardNumber class=" form-control" maxlength="16" name="sourceCardNumber" type="number" placeholder="Source Card Number" data-sb-validations="required" />
+            <label for="sourceCardNumber">Source Card Number</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input class=" form-control" maxlength="16" name="destinationCardNumber" type="number" placeholder="Destination Card Number" data-sb-validations="required" />
+            <label for="destinationCardNumber">Destination Card Number</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input class=" form-control" name="amount" type="number" placeholder="Amount" data-sb-validations="required" />
+            <label for="amount">Amount</label>
+        </div>
+       
+        <div class="d-grid">
+            <button class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button>
+
+        </div>
+
+    </form>
+</div>

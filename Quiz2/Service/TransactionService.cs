@@ -27,6 +27,15 @@ namespace Quiz2.Service
             var isSuccess = false;
             float fee = 0;
 
+            if (amount > 1000)
+            {
+                fee = (float)(1.5 * amount) / 100;
+            }
+            else
+            {
+                fee = (float)(0.5 * amount) / 100;
+            }
+
             if (amount == 0)
                 return "The transfer amount must be greater than 0";
 
@@ -46,26 +55,18 @@ namespace Quiz2.Service
             var sourceCard = _cardRepository.GetCardBy(sourceCardNumber);
             var destinationCard = _cardRepository.GetCardBy(destinationCardNumber);
 
-            if (sourceCard.Balance <= amount)
+            if (sourceCard.Balance <= amount + fee)
                 return "your card doesn't have enough balance for this transaction";
 
             //if ((_transactionRepository.DailyWithdrawal(sourceCardNumber) + amount) > 250)
             //    return "Your daily transfer limit is full";
             if (_codeVerifyRepository.GetCode().Code != code)
                 return "Verify Code Is Not Correct";
-            if (_codeVerifyRepository.GetCode().date.AddMinutes(5) < DateTime.Now)
+            if (_codeVerifyRepository.GetCode().date.AddSeconds(20) < DateTime.Now)
                 return "Code is Disable";
             
             try
             {
-                if(amount > 1000)
-                {
-                    fee = (float) (1.5 * amount) / 100;
-                } else
-                {
-                    fee = (float) (0.5 * amount) / 100;
-                }
-
                 _cardRepository.Withdraw(sourceCardNumber, amount + fee);
                 _cardRepository.Deposit(destinationCardNumber, amount);
                 _cardRepository.SaveChanges();

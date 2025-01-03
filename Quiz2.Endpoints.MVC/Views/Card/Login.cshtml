@@ -1,0 +1,22 @@
+﻿
+<div class="container px-5 my-5">
+    <p style="text-align:center; color:blueviolet; font-size:20px; margin-bottom:80px;">Login</p>
+
+
+    <form method="post" asp-action="LoginCard">
+        <div class="form-floating mb-3">
+            <input class=" form-control" name="cardNumber" type="text" placeholder="Card Number" data-sb-validations="required" />
+            <label for="cardNumber">Card Number</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input class=" form-control" name="password" type="text" placeholder="Password" data-sb-validations="required" />
+            <label for="password">Password</label>
+
+        </div>
+        <div class="d-grid mb-3">
+            <button class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button>
+        </div>
+
+    </form>
+
+    </div>

@@ -1,0 +1,63 @@
+﻿@model ShowInformationViewModel
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered table-sm">
+        <thead>
+            <tr>
+
+                <th scope="col">Source Card Number</th>
+                <th scope="col">Destinations Card Number</th>
+                <th scope="col">Destinations Card Name</th>
+                <th scope="col">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+           
+                <tr>
+                    <th scope="row">@Model.SourceCardNumber</th>
+                <td>@Model.DestinationsCard.CardNumber</td>
+                <td>@Model.DestinationsCard.User.FirstName @Model.DestinationsCard.User.LastName</td>
+                    <td>@Model.Amount</td>
+                </tr>
+            
+        </tbody>
+    </table>
+</div>
+
+<div class="container px-5 my-5 mt-3">
+    <form method="post" asp-action="TransferMoney">
+
+
+
+
+        <div class="form-floating mb-3">
+            <input value=@Model.SourceCardNumber hidden class=" form-control" maxlength="16" name="sourceCardNumber" type="number" placeholder="Source Card Number" data-sb-validations="required" />
+            <label for="sourceCardNumber">Source Card Number</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input value=@Model.DestinationsCard.CardNumber hidden class=" form-control" maxlength="16" name="destinationCardNumber" type="number" placeholder="Destination Card Number" data-sb-validations="required" />
+            <label for="destinationCardNumber">Destination Card Number</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input hidden value=@Model.Amount class=" form-control" name="amount" type="number" placeholder="Amount" data-sb-validations="required" />
+            <label for="amount">Amount</label>
+        </div>
+
+
+
+        <div class="form-floating mb-3">
+            <input class=" form-control" name="codeVerify" type="number" placeholder="Code Verify" data-sb-validations="required" />
+            <label for="codeVerify">Code Verify</label>
+
+            <a asp-action="GenerateCode" class="btn btn-success" type="button">Send Code</a>
+
+        </div>
+        <div class="d-grid">
+            <button class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button>
+
+        </div>
+
+    </form>
+</div>
